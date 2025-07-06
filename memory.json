@@ -1,0 +1,13 @@
+{
+  "preferences": {
+    "tone": "casual",
+    "emojis": false,
+    "concise": false
+  },
+  "facts": {
+    "name": "Divyam",
+    "project": "Virtual AI Assistant",
+    "assistant_name": "Deskora"
+  },
+  "feedback": []
+}
