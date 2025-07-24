@@ -1,8 +1,11 @@
 from assistant.core import handle_input
 from assistant.database import init_db
+from assistant.planner import initialize_assistant
+
 
 def main():
     init_db()
+    initialize_assistant()
     print("Assistant is ready! Type 'exit' to quit.")
 
     while True:

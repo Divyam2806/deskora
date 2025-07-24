@@ -3,13 +3,21 @@ from assistant.memory import load_memory
 
 
 
-llm = Llama(
-    model_path="models/phi3-mini.gguf",  # your downloaded model
-    n_ctx=2048,                          # context size
-    n_threads=8,
-    verbose=False,
-    chat_format= "chatml"
-)
+# llm = Llama(
+#     model_path="models/phi3-mini.gguf",  # your downloaded model
+#     n_ctx=3000,                          # context size
+#     n_threads=9,
+#     verbose=False,
+#     chat_format= "chatml"
+# ) code commented bcs instead of llm, gemini is being used
+
+_system_prompt_cache = None
+
+def get_system_prompt(force_refresh=False) -> str:
+    global _system_prompt_cache
+    if _system_prompt_cache is None or force_refresh:
+        _system_prompt_cache = build_system_prompt()
+    return _system_prompt_cache
 
 # Build dynamic system prompt based on memory
 def build_system_prompt():
@@ -30,7 +38,7 @@ def build_system_prompt():
         style += " Keep your responses short and to the point."
 
     return (
-        f"You are a helpful desktop assistant named VTant.\n"
+        f"You are a helpful desktop assistant named Deskora.\n"
         f"The user is named {name} and is working on {project}.\n"
         f"{style}"
     )

@@ -11,3 +11,5 @@ assistant_memory.db
 # Model files
 models/
 *.gguf
+
+.env
