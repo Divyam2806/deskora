@@ -1,127 +1,137 @@
-# 🧠 Deskora — Your Desktop AI Companion
+## Deskora – Your Personal AI Assistant
 
-**Deskora** is a privacy-respecting, local virtual assistant designed to run entirely on your machine. Powered by lightweight LLMs like Phi-3 Mini and Python, Deskora can learn, remember, and assist you — all with a charming personality!
-
-> 💻 No cloud. No surveillance. Just you and your personal AI — on your own terms.
+**Deskora** is a local-first AI assistant powered by Google’s Gemini API. It can understand and respond to your natural language input, perform actions, store facts, speak replies out loud, and listen to voice commands — all within a stateful conversation.
 
 ---
 
-## 🚀 Features
+### ✨ Features
 
-- 🧠 **LLM-Powered Responses** – Uses `llama-cpp-python` to run open-source GGUF models locally
-- 💾 **Long-Term Memory** – Remembers your preferences, facts, and feedback across sessions
-- 🧩 **Skill System** – Execute tasks like opening apps or storing information
-- 🗂️ **Modular Design** – Easily add new features, skills, and memory extensions
-- 🎨 **Personality Engine** – Customize tone, name, emojis, and response style
-
----
-
-## 📷 Preview (Coming Soon!)
-
-*A little virtual buddy living on your desktop... coming soon!*
+* 🔁 Stateful chat with long-term memory
+* 🧠 Planner system powered by **Gemini API**
+* 🗣️ Voice output using **gTTS**
+* 🎙️ Voice input using **SpeechRecognition**
+* 💾 SQLite + SQLAlchemy for persistence
+* 🧩 Action execution engine for real-world tasks
+* ⚙️ Toggle `speaking` and `listening` modes with settings
 
 ---
 
-## ⚙️ Setup Instructions
+### 🛠️ Tech Stack
 
-### 1. Clone the repo
+| Component    | Tool/Library               |
+| ------------ | -------------------------- |
+| LLM Backend  | Google Gemini API          |
+| Voice Output | gTTS, playsound            |
+| Voice Input  | SpeechRecognition, PyAudio |
+| Storage      | SQLite + SQLAlchemy        |
+| Language     | Python 3.x                 |
+
+---
+
+### 📁 Project Structure
+
+```
+assistant/
+│
+├── core.py              # Main processing logic
+├── planner.py           # Gemini prompt planner
+├── skills.py            # Executes actions
+├── database.py          # DB models and helpers
+├── settings.py          # Toggle settings
+├── gemini_llm.py 
+│
+speech/
+├── speaker.py           # gTTS-based speaking
+├── listener.py          # SpeechRecognition input
+│
+main.py                  # Main loop
+.env                     # API key (should be gitignored)
+```
+
+---
+
+### 🚀 Getting Started
+
+#### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Divyam2806/deskora.git
+git clone https://github.com/your-username/deskora.git
 cd deskora
-````
+```
 
-### 2. Set up a virtual environment (optional but recommended)
+#### 2. Set up a virtual environment
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+#### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Download an LLM Model (Example: Phi-3 Mini)
+#### 4. Add your Gemini API Key
 
-> 🧠 Deskora supports GGUF models via `llama-cpp-python`.
-
-Download [Phi-3 Mini (4K, Q4 GGUF)](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-GGUF) and place it in:
+Create a `.env` file:
 
 ```
-/models/phi3-mini.gguf
+GEMINI_API_KEY=your_api_key_here
 ```
 
-*(The `models/` folder is gitignored — you must place the model manually.)*
+Ensure `.env` is in `.gitignore` to avoid pushing sensitive data.
 
 ---
 
-## 🧪 Run Deskora
+### 🗣️ Voice Features
+
+Deskora can both **speak** and **listen**. You can toggle these features at runtime:
+
+| Command             | Effect                 |
+| ------------------- | ---------------------- |
+| `enable speaking`   | Enable voice output    |
+| `disable speaking`  | Mute voice output      |
+| `enable listening`  | Start using microphone |
+| `disable listening` | Use keyboard only      |
+
+---
+
+### 🧠 Memory & Summarization
+
+Deskora maintains state using conversation history. When the chat history grows too long, it:
+
+* Automatically summarizes previous messages (excluding the initial instruction prompt)
+* Sends the summary + latest messages to Gemini to stay within token limits
+
+---
+
+### 🧪 Example Usage
 
 ```bash
 python main.py
 ```
 
-You'll be greeted by Deskora in the terminal. Start chatting!
-
----
-
-## 🧠 Architecture Overview
+You'll see:
 
 ```
-deskora/
-├── assistant/
-|   ├── llm.py              # Handles LLM communication and prompting
-│   ├── core.py         # Main input/output logic and execution plan
-│   ├── skills.py       # Skills like open calculator, browser, etc.
-│   ├── planner.py      # Uses LLM to plan actions from input
-│   ├── memory.py       # Long-term memory using SQLite (via SQLAlchemy)
-│   └── database.py     # Fact storage and user info
-├── models/             # GGUF model files (gitignored)
-├── main.py             # CLI entry point
-├── requirements.txt
-└── .gitignore
+Assistant is ready! Type 'exit' to quit.
 ```
 
----
+Then speak or type naturally, like:
 
-## 🛠️ Planned Features
-
-* 🌐 GUI with virtual desktop entity
-* 🎤 Voice input/output
-* 🪄 Daily reminders and suggestions
-* 🔌 Plugin system for new tools
-* 🤖 Personality tuning
+* "Remind me to drink water every hour"
+* "What's the weather today?"
+* "Disable listening"
 
 ---
 
-## 🤝 Contributing
+### 🛑 Exiting
 
-Deskora is open-source and welcomes contributors!
+To exit the assistant, say or type:
 
-1. Fork the repo
-2. Create a new branch
-3. Submit a pull request 🚀
-
----
-
-## 📄 License
-
-MIT License — [LICENSE](LICENSE)
-
----
-
-## 💬 Acknowledgements
-
-* [llama-cpp-python](https://github.com/abetlen/llama-cpp-python)
-* [Phi-3 Mini](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-GGUF)
-* Inspired by old-school desktop companions and modern LLMs
-
----
-
-> ✨ Created with love, curiosity, and a little bit of chaos by [@Divyam2806](https://github.com/Divyam2806)
-
+```
+exit
+```
 
 
