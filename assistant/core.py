@@ -1,6 +1,6 @@
 from assistant.planner import generate_plan_from_input
 from assistant.settings import get_setting
-from assistant.skills import run_skill
+from assistant.skills.executor import run_skill
 from assistant.database import set_fact
 from speech.speaker import speak
 

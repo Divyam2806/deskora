@@ -1,8 +1,8 @@
 import json, regex as re
 from assistant.llm import generate_response #if using local llm
-from assistant import skills
 from assistant.gemini_llm import generate_response_from_gemini, initial_assistant_prompt
 from assistant.memory import load_memory
+from assistant.skills import skill_registry
 
 
 def extract_json(text: str) -> dict:
@@ -21,11 +21,10 @@ def extract_json(text: str) -> dict:
 
 
 def get_skill_docs() -> dict:
-    """Extracts all skill function names and their docstrings from skills.py"""
+    """Extracts all skill names and their docstrings from the registered skills."""
     docs = {}
-    for name in dir(skills):
-        func = getattr(skills, name)
-        if callable(func) and func.__doc__:
+    for name, func in skill_registry.items():
+        if func.__doc__:
             docs[name] = func.__doc__.strip()
     return docs
 

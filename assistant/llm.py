@@ -20,30 +20,30 @@ def get_system_prompt(force_refresh=False) -> str:
     return _system_prompt_cache
 
 # Build dynamic system prompt based on memory
-def build_system_prompt():
-    memory = load_memory()
-    prefs = memory.get("preferences", {})
-    facts = memory.get("facts", {})
+# def build_system_prompt():
+#     memory = load_memory()
+#     prefs = memory.get("preferences", {})
+#     facts = memory.get("facts", {})
+#
+#     tone = prefs.get("tone", "neutral")
+#     emojis = prefs.get("emojis", True)
+#     concise = prefs.get("concise", False)
+#     name = facts.get("name", "friend")
+#     project = facts.get("project", "your ongoing work")
+#
+#     style = f"Respond in a {tone} tone."
+#     if emojis:
+#         style += " Use emojis to sound friendly."
+#     if concise:
+#         style += " Keep your responses short and to the point."
+#
+#     return (
+#         f"You are a helpful desktop assistant named Deskora.\n"
+#         f"The user is named {name} and is working on {project}.\n"
+#         f"{style}"
+#     )
 
-    tone = prefs.get("tone", "neutral")
-    emojis = prefs.get("emojis", True)
-    concise = prefs.get("concise", False)
-    name = facts.get("name", "friend")
-    project = facts.get("project", "your ongoing work")
-
-    style = f"Respond in a {tone} tone."
-    if emojis:
-        style += " Use emojis to sound friendly."
-    if concise:
-        style += " Keep your responses short and to the point."
-
-    return (
-        f"You are a helpful desktop assistant named Deskora.\n"
-        f"The user is named {name} and is working on {project}.\n"
-        f"{style}"
-    )
-
-SYSTEM_PROMPT = build_system_prompt()
+# SYSTEM_PROMPT = build_system_prompt()
 
 # New function to send any prompt and get raw response
 def generate_response(user_prompt: str) -> str:
