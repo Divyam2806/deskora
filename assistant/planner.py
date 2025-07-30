@@ -1,5 +1,4 @@
 import json, regex as re
-from assistant.llm import generate_response #if using local llm
 from assistant.gemini_llm import generate_response_from_gemini, initial_assistant_prompt
 from assistant.memory import load_memory
 from assistant.skills import skill_registry
