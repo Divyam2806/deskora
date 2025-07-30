@@ -33,4 +33,6 @@ parsed = extract_json(output)
 print(parsed)
 
 
-#
+#for testing skills
+# from assistant.skills import skill_registry
+# print(skill_registry['get_current_time']())

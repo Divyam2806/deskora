@@ -79,7 +79,7 @@ Format your entire response as a strict JSON object like this:\n
 {{
   "reply": "<natural language reply to the user>",
   "actions": [
-    {{ "type": "run", "skill": "<skill_name>" }},
+    {{ "type": "run", "skill": "<skill_name>", "args":[<arguments_list>] }},
     {{ "type": "store", "key": "<fact_key>", "value": "<fact_value>" }}
   ]
 }}
@@ -105,7 +105,7 @@ def generate_plan_from_input(user_input: str) -> dict:
 
     parsed_data = extract_json(raw_response)
 
-    # print("[DEBUG] The JSON response is:\n", parsed_data)
+    print("[DEBUG] The JSON response is:\n", parsed_data)
 
     if not parsed_data:
         print("[ERROR] No JSON found in LLM output.")

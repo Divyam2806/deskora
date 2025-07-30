@@ -14,3 +14,7 @@ models/
 
 .env
 
+credentials.json
+
+assistant/skills/token.json
+token.json

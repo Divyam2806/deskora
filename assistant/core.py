@@ -18,6 +18,6 @@ def handle_input(user_input: str):
 
     for action in plan.get("actions", []):
         if action["type"] == "run":
-            run_skill(action["skill"])
+            run_skill(action["skill"], *action["args"])
         elif action["type"] == "store":
             set_fact(action["key"], action["value"])
