@@ -71,3 +71,4 @@ def generate_response_from_gemini(user_input: str) -> str:
 # initialize the assistant with the starter instruction and system prompt
 def initial_assistant_prompt(initial_prompt: str):
     chat.send_message(initial_prompt)
+    # print("[DEBUG]"+initial_prompt)

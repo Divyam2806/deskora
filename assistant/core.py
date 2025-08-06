@@ -21,3 +21,5 @@ def handle_input(user_input: str):
             run_skill(action["skill"], *action["args"])
         elif action["type"] == "store":
             set_fact(action["key"], action["value"])
+
+    return plan.get("reply", "Okay.")

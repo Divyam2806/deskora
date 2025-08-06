@@ -109,7 +109,7 @@ Deskora maintains state using conversation history. When the chat history grows 
 ### 🧪 Example Usage
 
 ```bash
-python main.py
+python main_cli.py
 ```
 
 You'll see:

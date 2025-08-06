@@ -3,21 +3,14 @@ import random
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel
 from PyQt6.QtGui import QMovie, QMouseEvent
 from PyQt6.QtCore import Qt, QTimer, QPoint, QSize
-from multiprocessing import Process, Queue
 from queue import Empty
-from backend import backend_worker
-
-
-
 from prompt_window import PromptWindow, ResponseBubble
 
-
-
-
-
 class DeskoraEntity(QWidget):
-    def __init__(self):
+    def __init__(self, prompt_queue, response_queue):
         super().__init__()
+        self.prompt_queue = prompt_queue
+        self.response_queue = response_queue
 
         # --- Window Properties ---
         self.setWindowFlags(
@@ -38,7 +31,7 @@ class DeskoraEntity(QWidget):
         self.initial_size = QSize(movie_size.width(), movie_size.height())
         self.setGeometry(100, 100, self.initial_size.width(), self.initial_size.height())
 
-        # --- Simplified Random Movement Logic ---
+        # Random Movement Logic
         self.movement_timer = QTimer(self)
         self.movement_timer.timeout.connect(self.update_behavior)
         self.movement_timer.start(1000)
@@ -47,36 +40,23 @@ class DeskoraEntity(QWidget):
         self.direction = 1
         self.speed = 2
         self.steps_left = 0
-
-        # --- Mouse Event Variables for Dragging ---
         self.old_pos = QPoint()
 
-        # --- Top-Level Windows ---
+        # Prompt & Response UI
         self.prompt_window = PromptWindow()
         self.prompt_window.prompt_submitted.connect(self.handle_prompt)
-
         self.response_bubble = ResponseBubble()
         self.response_bubble.setFixedWidth(200)
 
-        # --- IPC Setup: NEW ---
-        self.prompt_queue = Queue()
-        self.response_queue = Queue()
-
-        self.backend_process = Process(target=backend_worker,
-                                       args=(self.prompt_queue, self.response_queue))
-        self.backend_process.start()
-
-        # --- Timer to Check Response Queue: NEW ---
+        # Check for backend responses
         self.response_check_timer = QTimer(self)
         self.response_check_timer.timeout.connect(self.check_for_response)
-        self.response_check_timer.start(100)  # Check every 100ms
+        self.response_check_timer.start(100)
 
-        # --- EXISTING BUBBLE LOGIC, UNCHANGED ---
         self.response_timer = QTimer(self)
         self.response_timer.setSingleShot(True)
         self.response_timer.timeout.connect(self.response_bubble.hide)
 
-    # --- Mouse Event Handlers ---
     def mousePressEvent(self, event: QMouseEvent):
         if event.button() == Qt.MouseButton.LeftButton:
             self.old_pos = event.globalPosition().toPoint()
@@ -89,26 +69,19 @@ class DeskoraEntity(QWidget):
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self.old_pos = event.globalPosition().toPoint()
 
-    def open_prompt_window(self, ):
+    def open_prompt_window(self):
         if not self.prompt_window.isVisible():
-            # Use geometry() for robust positioning
             entity_geometry = self.geometry()
             prompt_x = entity_geometry.x() + (entity_geometry.width() - self.prompt_window.width()) // 2
             prompt_y = entity_geometry.y() - self.prompt_window.height() - 10
-
             self.prompt_window.move(prompt_x, prompt_y)
             self.prompt_window.show()
             self.prompt_window.activateWindow()
 
     def handle_prompt(self, prompt):
         print(f"Main process received prompt: '{prompt}'")
-
-        # --- NEW: Send the prompt to the backend process ---
         self.prompt_queue.put(prompt)
-
         self.prompt_window.close()
-
-
 
     def check_for_response(self):
         try:
@@ -129,7 +102,6 @@ class DeskoraEntity(QWidget):
         self.response_bubble.show()
         self.response_timer.start(5000)
 
-    # --- Simplified Random Movement Logic ---
     def update_behavior(self):
         if self.is_moving:
             self.move_entity()
@@ -158,16 +130,5 @@ class DeskoraEntity(QWidget):
             self.is_moving = False
 
     def closeEvent(self, event):
-        # Properly terminate the backend process on close
         self.prompt_queue.put(None)
-        self.backend_process.join()
         event.accept()
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False)
-
-    entity_window = DeskoraEntity()
-    entity_window.show()
-    sys.exit(app.exec())
