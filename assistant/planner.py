@@ -100,7 +100,7 @@ def generate_plan_from_input(user_input: str) -> dict:
     # raw_response = generate_response(prompt)
     raw_response = generate_response_from_gemini(user_input)
 
-    # print("[DEBUG] The raw response is:\n", raw_response)
+    print("[DEBUG] The raw response is:\n", raw_response)
 
     parsed_data = extract_json(raw_response)
 

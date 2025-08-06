@@ -38,9 +38,10 @@ def search_files(
     Returns:
         list[str]: List of file paths matching the query.
     """
+    print("Assistant: Searching for files...\n")
     dir_path = resolve_directory(directory)
     if not os.path.isdir(dir_path):
-        print("Assistant: Found no such file.")
+        print("Found no such file.")
         return []
 
     results = []
@@ -59,5 +60,5 @@ def search_files(
         if not recursive:
             break
 
-    print(f"Assistant: Here are the results {results}", results)
+    print(f"Here are the results {results}", results)
     return results
