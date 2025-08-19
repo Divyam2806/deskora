@@ -16,6 +16,10 @@ def backend_worker(prompt_queue, response_queue):
             print("Backend worker shutting down.")
             break
 
+        if prompt.lower() == "exit":
+            response_queue.put("__SHUTDOWN__")  # special signal
+            break
+
         print(f"Processing prompt: {prompt}")
         response = process_prompt(prompt)
         response_queue.put(response)

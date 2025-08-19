@@ -23,14 +23,15 @@ if __name__ == "__main__":
             break
 
     # Start GUI
+
     app = QApplication(sys.argv)
     app.setQuitOnLastWindowClosed(False)
 
     entity_window = DeskoraEntity(prompt_queue, response_queue)
     entity_window.show()
+    print("gui started")
 
     exit_code = app.exec()
-
     # Clean shutdown
     prompt_queue.put(None)
     backend_process.join()

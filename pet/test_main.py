@@ -1,78 +1,52 @@
-# main_cli.py
-
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+from PyQt6.QtGui import QPixmap
+from PyQt6.QtCore import QTimer
+from PIL import Image, ImageQt
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QLabel
-from PyQt6.QtGui import QMovie
-from PyQt6.QtCore import Qt, QPoint, QSize, QTimer
-
-from prompt_window import ResponseBubble
 
 
-class DeskoraEntity(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint |
-            Qt.WindowType.WindowStaysOnTopHint |
-            Qt.WindowType.SubWindow
-        )
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+class GifLabel(QLabel):
+    def __init__(self, gif_path, parent=None):
+        super().__init__(parent)
+        self.gif = Image.open(gif_path)   # Load GIF with Pillow
+        self.frames = []
+        self.durations = []
 
-        self.entity_label = QLabel(self)
-        self.movie = QMovie("entity.gif")
-        self.entity_label.setMovie(self.movie)
-        self.movie.start()
+        # Extract all frames
+        try:
+            while True:
+                frame = self.gif.copy().convert("RGBA")
+                self.frames.append(ImageQt.ImageQt(frame))  # Convert to Qt format
+                self.durations.append(self.gif.info.get("duration", 100))  # Frame delay
+                self.gif.seek(self.gif.tell() + 1)
+        except EOFError:
+            pass
 
-        movie_size = self.movie.currentImage().size()
-        self.setGeometry(100, 100, movie_size.width(), movie_size.height())
+        self.current_frame = 0
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.next_frame)
+        self.timer.start(self.durations[0])  # Start with first frame’s duration
 
-        self.old_pos = QPoint()
+        # Show first frame
+        self.setPixmap(QPixmap.fromImage(self.frames[0]))
 
-        self.response_bubble = ResponseBubble(self)
-        self.response_bubble.setFixedWidth(200)
+    def next_frame(self):
+        self.current_frame = (self.current_frame + 1) % len(self.frames)
+        self.setPixmap(QPixmap.fromImage(self.frames[self.current_frame]))
+        self.timer.start(self.durations[self.current_frame])  # Use per-frame delay
 
-        QTimer.singleShot(2000, self.test_show_bubble)
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            self.old_pos = event.globalPosition().toPoint()
+def main():
+    app = QApplication(sys.argv)
+    window = QWidget()
+    layout = QVBoxLayout(window)
 
-    def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.MouseButton.LeftButton:
-            delta = event.globalPosition().toPoint() - self.old_pos
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self.old_pos = event.globalPosition().toPoint()
+    gif_label = GifLabel("entity.gif")  # replace with your gif filename
+    layout.addWidget(gif_label)
 
-    def test_show_bubble(self):
-        print("Attempting to show response bubble...")
-        response = "Hello from the test bubble!"
-
-        # Prepare text and size first
-        self.response_bubble.setText(response)
-        self.response_bubble.adjustSize()
-
-        # Get global position of the entity window
-        entity_global_pos = self.mapToGlobal(QPoint(0, 0))
-
-        # Calculate position ABOVE the entity, centered horizontally
-        bubble_x = entity_global_pos.x() + (self.width() - self.response_bubble.width()) // 2
-        bubble_y = entity_global_pos.y() - self.response_bubble.height() - 10
-
-        print(f"Entity global pos: {entity_global_pos}")
-        print(f"Bubble position: {bubble_x}, {bubble_y}")
-
-        self.response_bubble.move(bubble_x, bubble_y)
-        self.response_bubble.show_response(response, duration=3000)
-
-        print("Bubble should be on screen now.")
-
-        QTimer.singleShot(5000, self.response_bubble.hide)
+    window.show()
+    sys.exit(app.exec())
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    app.setQuitOnLastWindowClosed(False)
-
-    entity_window = DeskoraEntity()
-    entity_window.show()
-    sys.exit(app.exec())
+    main()

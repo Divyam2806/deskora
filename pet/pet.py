@@ -1,9 +1,10 @@
-import sys
 import random
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel
 from PyQt6.QtGui import QMovie, QMouseEvent
 from PyQt6.QtCore import Qt, QTimer, QPoint, QSize
 from queue import Empty
+
+from gif_label import GifLabel
 from prompt_window import PromptWindow, ResponseBubble
 
 class DeskoraEntity(QWidget):
@@ -20,15 +21,19 @@ class DeskoraEntity(QWidget):
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
+
         # Label for the animated GIF
-        self.entity_label = QLabel(self)
-        self.movie = QMovie("entity.gif")
-        self.entity_label.setMovie(self.movie)
-        self.movie.start()
+        # self.entity_label = QLabel(self)
+        # self.movie = QMovie("entity2.gif")
+        # self.entity_label.setMovie(self.movie)
+        # self.movie.start()
+        # print("DEBUG ",self.movie.isValid())
+
+        self.entity_label = GifLabel("entity.gif", self)
 
         # Initial size based on the GIF
-        movie_size = self.movie.currentImage().size()
-        self.initial_size = QSize(movie_size.width(), movie_size.height())
+        frame_size = self.entity_label.frames[0].size()  # QSize from first frame
+        self.initial_size = QSize(frame_size.width(), frame_size.height())
         self.setGeometry(100, 100, self.initial_size.width(), self.initial_size.height())
 
         # Random Movement Logic
@@ -80,6 +85,7 @@ class DeskoraEntity(QWidget):
 
     def handle_prompt(self, prompt):
         print(f"Main process received prompt: '{prompt}'")
+
         self.prompt_queue.put(prompt)
         self.prompt_window.close()
 
@@ -88,6 +94,10 @@ class DeskoraEntity(QWidget):
             while True:
                 response = self.response_queue.get_nowait()
                 print(f"Main process received response: '{response}'")
+                if response == "__SHUTDOWN__":
+                    print("Shutting down Deskora GUI...")
+                    QApplication.quit()  # Closes the application
+                    return
                 self.show_response(response)
         except Empty:
             pass

@@ -18,3 +18,5 @@ credentials.json
 
 assistant/skills/token.json
 token.json
+
+pet/test_main.py
