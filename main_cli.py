@@ -19,23 +19,23 @@ def main():
         else:
             user_input = input("You: ").strip()  # fallback to keyboard
 
-            # Handle toggle commands
-            if user_input == "enable speaking":
-                set_setting("speaking_enabled", True)
-                print("Speaking enabled.")
-                continue
-            elif user_input == "disable speaking":
-                set_setting("speaking_enabled", False)
-                print("Speaking disabled.")
-                continue
-            elif user_input == "enable listening":
-                set_setting("listening_enabled", True)
-                print("Listening enabled.")
-                continue
-            elif user_input == "disable listening":
-                set_setting("listening_enabled", False)
-                print("Listening disabled.")
-                continue
+        # Handle toggle commands
+        if user_input == "enable speaking":
+            set_setting("speaking_enabled", True)
+            print("Speaking enabled.")
+            continue
+        elif user_input == "disable speaking":
+            set_setting("speaking_enabled", False)
+            print("Speaking disabled.")
+            continue
+        elif user_input == "enable listening":
+            set_setting("listening_enabled", True)
+            print("Listening enabled.")
+            continue
+        elif user_input == "disable listening":
+            set_setting("listening_enabled", False)
+            print("Listening disabled.")
+            continue
 
         if user_input.lower() == "exit":
             print("Terminating Assistant.")
