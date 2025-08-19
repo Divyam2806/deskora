@@ -2,7 +2,7 @@
 import json
 import os
 
-MEMORY_FILE = "memory.json"
+MEMORY_FILE = "../memory.json"
 
 # Default memory structure
 DEFAULT_MEMORY = {
