@@ -10,9 +10,10 @@
 * 🧠 Planner system powered by **Gemini API**
 * 🗣️ Voice output using **gTTS**
 * 🎙️ Voice input using **SpeechRecognition**
-* 💾 SQLite + SQLAlchemy for persistence
+* 💾 SQLAlchemy for persistence
 * 🧩 Action execution engine for real-world tasks
 * ⚙️ Toggle `speaking` and `listening` modes with settings
+* 🖥️ Two modes of interaction: **CLI** or **Desktop Pet GUI**
 
 ---
 
@@ -23,30 +24,9 @@
 | LLM Backend  | Google Gemini API          |
 | Voice Output | gTTS, playsound            |
 | Voice Input  | SpeechRecognition, PyAudio |
-| Storage      | SQLite + SQLAlchemy        |
+| Storage      | SQLAlchemy                 |
+| GUI (Pet)    | PyQt6, Pillow              |
 | Language     | Python 3.x                 |
-
----
-
-### 📁 Project Structure
-
-```
-assistant/
-│
-├── core.py              # Main processing logic
-├── planner.py           # Gemini prompt planner
-├── skills.py            # Executes actions
-├── database.py          # DB models and helpers
-├── settings.py          # Toggle settings
-├── gemini_llm.py 
-│
-speech/
-├── speaker.py           # gTTS-based speaking
-├── listener.py          # SpeechRecognition input
-│
-main.py                  # Main loop
-.env                     # API key (should be gitignored)
-```
 
 ---
 
@@ -74,13 +54,56 @@ pip install -r requirements.txt
 
 #### 4. Add your Gemini API Key
 
-Create a `.env` file:
+Create a `.env` file in the project root:
 
 ```
 GEMINI_API_KEY=your_api_key_here
 ```
 
 Ensure `.env` is in `.gitignore` to avoid pushing sensitive data.
+
+---
+
+### 🖥️ Running Deskora
+
+Deskora can run in **two modes**:
+
+#### 1. CLI Mode (Terminal-based)
+
+Run:
+
+```bash
+python main_cli.py
+```
+
+You’ll see:
+
+```
+Assistant is ready! Type 'exit' to quit.
+```
+
+Then type naturally, like:
+
+* "Remind me to drink water every hour"
+* "What's the weather today?"
+* "Disable listening"
+
+---
+
+#### 2. Pet Mode (GUI Desktop Entity)
+
+Run:
+
+```bash
+python pet/pet_main.py
+```
+
+This launches **Deskora Entity**, a floating, animated character on your desktop.
+You can interact with it by:
+
+* **Right-clicking** → Open the prompt window
+* **Typing a query** → Entity will respond in a speech bubble
+* **Dragging** → Move the entity around your screen
 
 ---
 
@@ -106,32 +129,9 @@ Deskora maintains state using conversation history. When the chat history grows 
 
 ---
 
-### 🧪 Example Usage
-
-```bash
-python main_cli.py
-```
-
-You'll see:
-
-```
-Assistant is ready! Type 'exit' to quit.
-```
-
-Then speak or type naturally, like:
-
-* "Remind me to drink water every hour"
-* "What's the weather today?"
-* "Disable listening"
-
----
-
 ### 🛑 Exiting
 
-To exit the assistant, say or type:
+To exit Deskora:
 
-```
-exit
-```
-
-
+* In **CLI mode** → Type: `exit`
+* In **Pet mode** → Close the entity window or type `exit` in the prompt
